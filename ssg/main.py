@@ -115,8 +115,8 @@ class StaticSiteGenerator:
                     'description': post.metadata.get('description', '')
                 })
         
-        # Sort pages by nav_order
-        self.pages.sort(key=lambda x: x['nav_order'])
+        # Sort pages by date (newest first), then title
+        self.pages.sort(key=lambda x: (x.get('date', '0000-00-00'), x.get('title', '')), reverse=True)
         print(f"Collected {len(self.pages)} pages for navigation")
     
     def generate_pages(self):
@@ -151,8 +151,8 @@ class StaticSiteGenerator:
                         'description': post.metadata.get('description', '')
                     })
         
-        # Sort blog posts by date (or nav_order if date not available)
-        blog_posts = sorted(blog_posts, key=lambda x: (x.get('nav_order', 999), x.get('date', '')))
+        # Sort blog posts by date (newest first), then title
+        blog_posts = sorted(blog_posts, key=lambda x: (x.get('date', '0000-00-00'), x.get('title', '')), reverse=True)
             
         content_files = os.listdir(self.content_dir)
         print(f"Found {len(content_files)} files in content directory")
