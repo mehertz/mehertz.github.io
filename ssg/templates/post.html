@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} | {{ site_title | default('My Personal Blog') }}</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="index.html">{{ site_title | default('My Personal Blog') }}</a></h1>
+            <nav>
+                <!-- Dynamic navigation could be added back here if needed -->
+                <!-- {% for page in pages %}
+                     <li><a href="{{ page.safe_url }}">{{ page.title }}</a></li>
+                     {% endfor %} -->
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <p class="back-link"><a href="index.html"><i class="fas fa-arrow-left"></i> Back to posts</a></p>
+
+            <article>
+                <header class="post-header">
+                    <h1>{{ title }}</h1>
+                    {% if date %}<time datetime="{{ date }}"><i class="far fa-calendar-alt"></i> {{ date | replace("-", "/") }}</time>{% endif %}
+                </header>
+                <div class="content">
+                    {{ content | safe }}
+                </div>
+                
+                <!-- Post Navigation -->
+                {% if prev_post or next_post %}
+                <nav class="post-navigation" aria-label="Post navigation">
+                    {% if prev_post %}
+                    <a href="{{ prev_post.url }}" class="prev-post" rel="prev">
+                        <span class="nav-label">Previous Post</span>
+                        <span>{{ prev_post.title }}</span>
+                    </a>
+                    {% else %}
+                    <div></div> <!-- Empty div to maintain layout -->
+                    {% endif %}
+                    
+                    {% if next_post %}
+                    <a href="{{ next_post.url }}" class="next-post" rel="next">
+                        <span class="nav-label">Next Post</span>
+                        <span>{{ next_post.title }}</span>
+                    </a>
+                    {% else %}
+                    <div></div> <!-- Empty div to maintain layout -->
+                    {% endif %}
+                </nav>
+                {% endif %}
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; {{ year | default(2023) }} {{ site_title | default('My Personal Blog') }}. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html> 

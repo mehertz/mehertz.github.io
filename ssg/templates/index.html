@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ site_title | default('My Blog') }}</title>
+    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><a href="index.html">{{ site_title | default('My Personal Blog') }}</a></h1>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            {% if site_description %}
+            <p class="site-description">{{ site_description }}</p>
+            {% endif %}
+            
+            <div class="post-list">
+                {% for page in pages %}
+                <article class="post-item">
+                    <h2><a href="{{ page.safe_url }}">{{ page.title }}</a></h2>
+                    {% if page.date %}<time datetime="{{ page.date }}"><i class="far fa-calendar-alt"></i> {{ page.date | replace("-", "/") }}</time>{% endif %}
+                    {% if page.description %}<p>{{ page.description }}</p>{% endif %}
+                    <a href="{{ page.safe_url }}" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; {{ year | default(2023) }} {{ site_title | default('My Personal Blog') }}. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html> 

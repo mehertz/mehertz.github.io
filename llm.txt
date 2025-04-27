@@ -1,0 +1,129 @@
+# Static Site Generator (SSG) Documentation (Updated)
+
+## Overview
+The Static Site Generator (SSG) is a lightweight system built in Python that converts Markdown content files into HTML web pages. The generator is designed to create a simple blog-focused website where content is organized primarily as chronological posts.
+
+## Core Components
+
+### Main Components:
+1.  **Content Directory (`content/`)**: Contains Markdown files (`.md`) with YAML frontmatter for metadata.
+2.  **Templates Directory (`ssg/templates/`)**: Contains Jinja2 HTML templates used for rendering.
+3.  **Static Directory (`ssg/static/`)**: Contains static assets like CSS, JavaScript, and images. These are copied directly to the output.
+4.  **Output Directory (`html/`)**: Destination for the generated HTML site and copied static assets.
+5.  **Configuration File (`config.json`)**: Located in the root `website` directory, stores site-wide settings.
+
+### Key Files & Structure:
+-   `website/`
+    -   `config.json`: Site configuration (title, year, description).
+    -   `content/`: Markdown source files for posts.
+    -   `html/`: Output directory (generated).
+    -   `ssg/`
+        -   `main.py`: Core `StaticSiteGenerator` class logic.
+        -   `cli.py`: Command-line interface script.
+        -   `static/`: Static assets (e.g., `css/style.css`).
+        -   `templates/`
+            -   `index.html`: Template for the homepage/post listing.
+            -   `post.html`: Template used for rendering individual blog posts.
+    -   `run-ssg.py`: Script to execute the build process via the CLI.
+    -   `requirements.txt`: Lists Python dependencies.
+
+## How It Works
+
+### Initialization (`StaticSiteGenerator.__init__`)
+1.  Takes paths for content, templates, static, and output directories.
+2.  Loads site-wide configuration (`site_title`, `year`, `site_description`) from `config.json` using the `load_config` helper function. Provides defaults if the file is missing or invalid.
+3.  Initializes a Jinja2 `Environment` pointing to the `template_dir`.
+4.  Initializes an empty `self.pages` list to store metadata collected from content files.
+
+### Build Process (`StaticSiteGenerator.build`)
+1.  **Clean Output (`clean_output_dir`)**: Removes the existing `output_dir` and recreates it.
+2.  **Copy Static Files (`copy_static_files`)**: Copies the entire `static_dir` contents into `output_dir/static/`.
+3.  **Generate Pages (`generate_pages`)**: Orchestrates the collection, processing, and rendering of content.
+
+### Page Generation (`StaticSiteGenerator.generate_pages`)
+1.  **Collect Pages (`collect_pages`)**: Iterates through `.md` files in `content_dir`, parses frontmatter, and stores metadata (title, URL, date, description, etc.) for each file in `self.pages`. It also calculates the `safe_url` (output filename).
+2.  **Sort Blog Posts**: Creates a separate list `blog_posts` containing metadata specifically for blog posts (used for prev/next navigation). This list is sorted first by `nav_order` (if present) and then by `date`.
+3.  **Process Markdown Files**: Loops through each `.md` file again:
+    *   Renders Markdown content to HTML using `render_markdown`.
+    *   Determines the template to use (currently hardcoded to `post.html` for all content files).
+    *   Loads the Jinja2 template.
+    *   Prepares the context dictionary (`metadata`) including:
+        *   Parsed frontmatter data.
+        *   `content`: The rendered HTML from Markdown.
+        *   `pages`: The full list of collected pages (for potential site-wide navigation, though currently unused in templates).
+        *   `site_title`, `year`: Loaded from `config.json`.
+        *   `prev_post`, `next_post`: Calculated based on the sorted `blog_posts` list if the current file is being rendered with `post.html`.
+    *   Renders the template with the context using `template.render()`.
+    *   Writes the final HTML to the corresponding path in `output_dir`.
+4.  **Generate Index Page**: *Always* generates `index.html` directly:
+    *   Loads the `ssg/templates/index.html` template.
+    *   Prepares a context dictionary including `site_title`, `year`, `site_description` (from `config.json`), and the `pages` list.
+    *   Renders the `index.html` template with this context.
+    *   Writes the result to `html/index.html`.
+    *   Includes a fallback mechanism to use `page.html` if `index.html` template is missing (though `page.html` itself is currently unused).
+
+## Template System (Jinja2)
+
+### Available Templates:
+-   `post.html`: Used for rendering all Markdown content files.
+-   `index.html`: Used exclusively for generating the site's homepage, which lists posts.
+
+### Key Template Variables:
+-   **Available in `post.html` & `index.html`:**
+    -   `site_title`: Site title from `config.json`.
+    -   `year`: Copyright year from `config.json`.
+    -   `pages`: List of dictionaries, each containing metadata for a page (`title`, `safe_url`, `date`, `description`, etc.). Used in `index.html` to list posts.
+-   **Available only in `index.html`:**
+    -   `site_description`: Site description from `config.json`.
+-   **Available only in `post.html`:**
+    -   `title`: Post title from frontmatter.
+    -   `date`: Post date from frontmatter.
+    -   `content`: HTML content rendered from Markdown.
+    -   `prev_post`: Dictionary with metadata of the previous post (if available), contains `url` and `title`.
+    -   `next_post`: Dictionary with metadata of the next post (if available), contains `url` and `title`.
+
+## Configuration (`config.json`)
+Located in the `website/` directory. Stores global site settings.
+
+```json
+{
+  "site_title": "Your Blog Name",
+  "year": 2024,
+  "site_description": "A short description for the homepage."
+}
+```
+
+## Content Format (`content/*.md`)
+Markdown files with YAML frontmatter.
+
+```yaml
+---
+title: Required Post Title
+date: YYYY-MM-DD # Required for sorting
+description: Optional summary for index page listings.
+nav_order: 1 # Optional: Used for sorting if date is ambiguous or missing
+---
+
+# Markdown Content
+
+Your post content goes here...
+```
+
+### Key Metadata:
+-   `title`: (Required) The title of the post.
+-   `date`: (Required) The publication date (YYYY-MM-DD format recommended for correct sorting).
+-   `description`: (Optional) A short summary displayed on the index page.
+-   `nav_order`: (Optional) An integer used as a primary sorting key before the date.
+
+## Dependencies (`requirements.txt`)
+-   `jinja2`: For templating.
+-   `markdown`: For converting Markdown to HTML.
+-   `python-frontmatter`: For parsing YAML frontmatter.
+
+## Running the Generator
+Use the provided script:
+```bash
+cd website
+python run-ssg.py
+```
+This executes the `main` function in `ssg/cli.py`, which parses arguments (though defaults are typically used), sets up paths relative to the execution directory (`website/`), validates necessary directories, instantiates `StaticSiteGenerator`, and calls its `build()` method. 

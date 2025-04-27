@@ -1,0 +1,8 @@
+[uv]
+index-url = "https://pypi.org/simple"
+# Enable reproducible builds
+use-hash-deps = true
+
+# Store lock files for deterministic installs
+use-lockfile = true
+lockfile = ".uv/lockfile.txt" 
