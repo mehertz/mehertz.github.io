@@ -1,18 +1,22 @@
 /* Updated Minimal Blog CSS */
 :root {
-  /* Playful Teal/Cyan Theme */
-  --primary-color: #14b8a6; /* Teal 500 */
-  --primary-color-hover: #0d9488; /* Teal 600 */
-  --text-color: #1f2937; /* Gray 800 */
-  --text-light: #4b5563; /* Gray 600 */
-  --background-color: #f8fafc; /* Slate 50 */
+  /* Blue-ish Color Theme */
+  --primary-color: #0284c7; /* Sky 600 */
+  --primary-color-hover: #0369a1; /* Sky 700 */
+  /* Removed other accent colors */
+  --text-color: #334155; /* Slate 700 */
+  --text-light: #64748b; /* Slate 500 */
+  --background-color: #f8fafc; /* Slate 50 (Keeping it light) */
   --content-bg: #ffffff; /* White */
-  --border-color: #e5e7eb; /* Gray 200 */
+  --border-color: #cbd5e1; /* Slate 300 */
   --link-color: var(--primary-color);
-  --code-bg: #f3f4f6; /* Gray 100 */
-  --code-text: #111827; /* Gray 900 */
-  --radius: 6px;
-  --transition: all 0.15s ease-in-out; /* Slightly faster transition */
+  --code-bg: #f1f5f9; /* Slate 100 */
+  --code-text: #1e2937; /* Slate 800 */
+  --hover-bg-color: #e0f2fe; /* Sky 100 - for subtle hover */
+
+  /* Structure/Font variables (keep as is) */
+  --radius: 8px;
+  --transition: all 0.15s ease-in-out;
   --monospace-font: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --sans-serif-font: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -64,36 +68,80 @@ a:hover {
 
 /* Header */
 header {
-  padding: 1.5rem 0;
-  margin-bottom: 3rem; /* Increased margin */
-  background-color: var(--content-bg);
-  border-bottom: 1px solid var(--border-color);
-  box-shadow: var(--shadow-sm);
-  /* Removed top border */
+  padding: 2rem 0; /* Keep padding */
+  margin-bottom: 1.5rem; /* Reduced margin below header again */
+  background-color: #e2e8f0; /* Slightly darker gray-blue (Slate 200) */
+  border-bottom: 1px solid var(--border-color); /* ADD BORDER BACK */
+  box-shadow: var(--shadow-sm); /* Keep subtle shadow */
+  position: relative;
+  overflow: visible;
+}
+
+/* Remove Fun colored wave border at bottom of header */
+header::after {
+  content: none; /* Ensure this is removed */
 }
 
 header .container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column; /* Stack items vertically */
+  align-items: flex-start; /* Align items to the start (left) */
 }
 
+/* Simple site title */
 header h1 {
-  font-family: var(--sans-serif-font); /* Changed to sans-serif for cleaner look */
-  font-size: 1.5rem; /* Adjusted size */
-  font-weight: 600;
+  font-family: var(--sans-serif-font);
+  font-size: 1.6rem; /* Reduce size further */
+  font-weight: 700; /* Make bolder */
   margin: 0;
+  position: relative;
 }
 
 header h1 a {
-  color: var(--text-color); /* Use default text color */
+  color: var(--primary-color); /* Use primary color */
   text-decoration: none;
+  display: inline-block;
+  transition: var(--transition);
 }
+
+/* Remove Underline effect on title */
+header h1 a::after {
+  content: none;
+}
+
 header h1 a:hover {
-  color: var(--primary-color);
+  color: var(--primary-color); /* Teal on hover */
   text-decoration: none;
 }
 
+/* Reset site description styling - Plain text */
+.site-description {
+  font-size: 1rem;
+  color: var(--text-light); /* Use text-light again */
+  text-align: left;
+  margin: 0.5rem 0 0 0; /* Reduced top margin, zero bottom */
+  padding: 0; /* Remove padding */
+  border: none;
+  position: relative;
+  line-height: 1.6;
+  font-weight: 400;
+  background-color: transparent; /* Ensure no background */
+  border-radius: 0; /* Remove radius */
+  box-shadow: none;
+  background-image: none;
+}
+
+/* Reset paragraph inside description */
+.site-description p {
+  color: inherit; /* Use parent color */
+  text-shadow: none;
+  display: block; /* Normal block display */
+}
+
+/* Remove divider */
+.post-list-divider {
+  display: none;
+}
 
 /* Navigation (Optional - currently commented out in HTML) */
 nav ul {
@@ -121,57 +169,63 @@ nav a:hover {
 
 /* Main content */
 main {
-  margin-bottom: 4rem; /* Increased margin */
+  margin-bottom: 4rem;
 }
 
-article, .post-item { /* Group shared styles */
-  margin-bottom: 2rem; /* Consistent margin */
-  background-color: var(--content-bg);
-  padding: 1.5rem 2rem; /* Adjusted padding */
-  border-radius: var(--radius);
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition); /* Add transform to transition */
+/* Reset article/post-item default styles */
+article, .post-item {
+  margin-bottom: 0; /* Handled by post-list gap */
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none; /* Remove all borders */
+  box-shadow: none;
+  transition: none;
+  border-left: none; /* Remove left border */
 }
 
-article:hover, .post-item:hover { /* Subtle hover effect */
-  border-color: var(--primary-color);
-  box-shadow: var(--shadow-md);
-  transform: translateY(-5px); /* Increased lift */
+/* Remove hover effect from base item */
+article:hover, .post-item:hover {
+  border-color: transparent;
+  border-left-color: transparent;
+  box-shadow: none;
+  transform: none;
+  background-color: transparent; /* Ensure no background on article itself */
 }
-
 
 article h1 {
-  font-size: 2.25rem; /* Larger article title */
-  margin-bottom: 0.75rem;
-  font-weight: 700; /* Bolder */
-  line-height: 1.2;
-  color: var(--text-color);
+  font-size: 2rem; /* Slightly larger than index title */
+  margin-bottom: 0.5rem; /* Reduced margin */
+  font-weight: 600; /* Match index title weight */
+  line-height: 1.3; /* Match index title */
+  color: var(--primary-color); /* Use primary blue */
 }
 
-article time {
-  display: block;
-  color: var(--text-light);
-  margin-bottom: 2rem; /* More space after date */
-  font-size: 0.9rem;
+/* Ensure icon uses primary color */
+article time i {
+  color: var(--primary-color);
+  margin-right: 0.4em;
 }
 
 /* Content styling */
 .content {
   line-height: 1.75; /* Better readability */
+  padding-top: 1.5rem; /* Add space above content */
 }
 
-.content h2, .content h3, .content h4, .content h5, .content h6 {
+.content h1, .content h2, .content h3, .content h4, .content h5, .content h6 {
   font-weight: 600;
-  margin-top: 2.5em;
-  margin-bottom: 1em;
+  margin-bottom: 0.5em;
   line-height: 1.3;
   color: var(--text-color);
 }
 
-.content h2 { font-size: 1.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.3em; }
-.content h3 { font-size: 1.4rem; }
-.content h4 { font-size: 1.2rem; }
+.content h1 { font-size: 1.75rem; color: var(--primary-color-hover); } /* Use darker blue */
+.content h2 { font-size: 1.5rem; padding-bottom: 0.3em; } /* Reduced size */
+.content h3 { font-size: 1.25rem; } /* Reduced size */
+.content h4 { font-size: 1.1rem; } /* Reduced size */
+.content h5 { font-size: 1rem; }   /* New rule for content h5 */
+.content h6 { font-size: 0.9rem; }  /* New rule for content h6 */
 
 .content p {
   margin-bottom: 1.25em; /* Consistent paragraph spacing */
@@ -231,9 +285,10 @@ article time {
 
 .content hr {
   border: 0;
-  height: 1px;
-  background-color: var(--border-color);
-  margin: 3em 0;
+  height: 0; /* Hide HR */
+  background-color: transparent;
+  margin: 0; /* Remove space */
+  padding: 0; /* Remove space */
 }
 
 .content img {
@@ -243,109 +298,106 @@ article time {
   margin: 1.5em 0;
 }
 
-/* Site Description on Index */
-.site-description {
-  font-size: 1.1rem;
-  color: var(--text-light);
-  text-align: center; /* Center description */
-  margin-bottom: 3rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border-color);
-}
-
-/* Post summaries (Index page) */
+/* Post summaries - Typography focused list */
 .post-list {
   display: grid;
-  grid-template-columns: 1fr; /* Default to single column */
-  gap: 1.5rem; /* Gap between grid items */
+  grid-template-columns: 1fr; /* Ensure single column */
+  gap: 2.5rem; /* Increased gap between posts */
   margin-top: 0;
 }
 
+/* Reset post item styles */
 .post-item {
-  /* Styles moved to shared rule above */
-  padding-bottom: 1.5rem; /* Ensure consistent padding */
+  position: relative;
+  margin-bottom: 0; /* Use gap */
+  background-color: transparent;
+  padding: 0;
+  border-radius: var(--radius); /* Add border-radius back */
+  border: none;
+  box-shadow: none;
+  transition: background-color var(--transition); /* Add transition */
+  overflow: visible;
+  border-left: none;
+  padding-left: 0;
 }
 
-.post-item:last-child {
-  /* No special styling needed now */
-}
-
-.post-item h2 {
-  font-size: 1.5rem;
-  margin-bottom: 0.3rem; /* Closer to date/desc */
-  font-weight: 600;
-}
-
-.post-item h2 a {
+/* Reset post link */
+.post-link {
+  display: block;
+  padding: 1rem 1.25rem; /* Add padding back for hover bg */
   color: var(--text-color);
   text-decoration: none;
+  transition: none;
 }
 
-.post-item h2 a:hover {
-  color: var(--primary-color);
-  text-decoration: underline;
+/* Add subtle background on hover */
+.post-item:hover {
+  background-color: var(--hover-bg-color); /* Use variable Sky 100 */
+  transform: none;
 }
 
-.post-item time {
-  display: block;
-  font-size: 0.85rem;
-  color: var(--text-light);
-  margin-bottom: 0.75rem;
+/* Style post title */
+.post-link h2 {
+  font-size: 1.5rem; /* Larger title */
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--primary-color); /* Default to primary blue */
+  transition: color var(--transition);
 }
 
-.post-item time i {
-  margin-right: 0.4em; /* Space between icon and date */
-  color: var(--text-light); /* Match date color */
-}
-
-.post-item p { /* Description */
-  margin-bottom: 1rem;
-  color: var(--text-light);
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
-
-.read-more {
-  display: inline-block;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--primary-color);
+/* Hover effect on title only */
+.post-item:hover .post-link h2 {
+  color: var(--primary-color-hover); /* Darker blue on hover */
   text-decoration: none;
-  transition: var(--transition);
 }
 
-.read-more:hover {
-  color: var(--primary-color-hover);
-  text-decoration: underline;
-  transform: translateX(3px) translateY(-1px); /* Add lift */
+/* Style date/time */
+.post-link time {
+  display: block;
+  font-size: 0.85rem; /* Slightly larger */
+  color: var(--text-light);
+  margin-bottom: 0.5rem; /* Space before description */
+  transition: none;
 }
-.read-more::after {
-  /* Remove text arrow, we'll use an icon */
+
+.post-link time i {
+  margin-right: 0.4em;
+  color: var(--primary-color); /* Use primary color for icon */
+}
+
+/* Style description */
+.post-link p {
+  margin-bottom: 0;
+  color: var(--text-light);
+  font-size: 0.95rem; /* Slightly larger */
+  line-height: 1.6; /* Increased line height */
 }
 
 /* Back to Posts link (Post page) */
 .back-link {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem; /* Further reduced margin below link */
   font-size: 0.9rem;
 }
 .back-link a {
   color: var(--text-light);
   text-decoration: none;
+  transition: color var(--transition); /* Add transition */
 }
 .back-link a:hover {
   color: var(--primary-color);
   text-decoration: underline;
-  transform: translateY(-1px); /* Subtle lift */
+  transform: none; /* Remove lift */
 }
 .back-link i {
     margin-right: 0.3em;
+    color: inherit; /* Inherit color from link */
 }
 
 /* Footer */
 footer {
   margin-top: 4rem; /* More space before footer */
   padding: 2rem 0;
-  border-top: 1px solid var(--border-color);
   background-color: var(--content-bg);
   text-align: center;
   font-size: 0.9rem;
@@ -356,7 +408,6 @@ footer {
 .post-navigation {
   margin-top: 3rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   gap: 1rem; /* Add gap between links */
@@ -366,7 +417,6 @@ footer {
 .post-navigation a {
   display: block;
   padding: 0.75rem 1rem; /* Add padding for larger click area */
-  border: 1px solid var(--border-color);
   border-radius: var(--radius);
   color: var(--text-color);
   text-decoration: none;
@@ -377,10 +427,10 @@ footer {
 
 .post-navigation a:hover {
   border-color: var(--primary-color);
-  background-color: #f0fdfa; /* Light teal background */
+  background-color: var(--hover-bg-color); /* Use variable Sky 100 */
   color: var(--primary-color);
   text-decoration: none;
-  transform: translateY(-2px); /* Lift nav link slightly */
+  transform: translateY(-2px);
 }
 
 .post-navigation .nav-label {
@@ -403,30 +453,62 @@ footer {
 .post-navigation .next-post { text-align: right; }
 
 /* Responsive */
-@media (min-width: 768px) { /* Apply grid layout on medium screens and up */
+@media (min-width: 768px) {
   .post-list {
-    grid-template-columns: repeat(2, 1fr); /* Two columns */
+    grid-template-columns: 1fr; /* Force single column even on larger screens */
   }
 }
 
 @media (max-width: 650px) {
-  html { font-size: 95%; } /* Slightly smaller base font */
+  html { font-size: 95%; }
 
   .container { padding: 0 1rem; }
 
-  header .container { flex-direction: column; gap: 0.5rem; }
-  nav ul { margin-top: 1rem; justify-content: center;}
+  header { padding: 1.5rem 0; } /* Adjust header padding */
+  header h1 { font-size: 1.6rem; } /* Adjust title size */
+  .site-description { margin-bottom: 1.5rem; font-size: 0.95rem; }
+
+  .post-list { gap: 2rem; } /* Reduce gap on smaller screens */
+  .post-link h2 { font-size: 1.3rem; }
+  .post-link time { font-size: 0.8rem; }
+  .post-link p { font-size: 0.9rem; line-height: 1.5; }
+
+  /* Keep nav stacking */
+  nav ul { margin-top: 1rem; justify-content: center; }
   nav li { margin: 0 0.75rem; }
 
+  /* Keep article/content responsive styles */
   article h1 { font-size: 1.8rem; }
   .content h2 { font-size: 1.5rem; }
   .content h3 { font-size: 1.25rem; }
 
+  /* Keep post nav stacking */
   .post-navigation a {
-    flex-basis: 100%; /* Stack navigation links */
+    flex-basis: 100%;
     max-width: 100%;
   }
-  .post-navigation .prev-post, .post-navigation .next-post { text-align: left; } /* Align both left when stacked */
+  .post-navigation .prev-post, .post-navigation .next-post { text-align: left; }
+}
 
-  article, .post-item { padding: 1rem 1.25rem; }
+/* Add rule for post header inside article */
+.post-header {
+  margin-bottom: 0; /* Remove any bottom margin */
+  background-color: var(--background-color); /* Match page background */
+  border: none; /* Explicitly remove all borders */
+}
+
+/* Style the new Posts heading */
+.posts-heading {
+  font-size: 1.4rem;
+  color: var(--text-color);
+  font-weight: 600;
+  margin-bottom: 1.5rem; /* Space before list */
+  display: flex;
+  align-items: center;
+}
+
+.posts-heading i {
+  font-size: 0.9em; /* Slightly smaller than heading text */
+  margin-left: 0.5em;
+  color: var(--text-light); /* Use lighter text color */
 } 

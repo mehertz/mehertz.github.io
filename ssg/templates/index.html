@@ -11,22 +11,29 @@
     <header>
         <div class="container">
             <h1><a href="index.html">{{ site_title | default('My Personal Blog') }}</a></h1>
+            {% if site_description %}
+            <div class="site-description">
+                <p>{{ site_description }}</p>
+            </div>
+            {% endif %}
         </div>
     </header>
 
     <main>
         <div class="container">
-            {% if site_description %}
-            <p class="site-description">{{ site_description }}</p>
-            {% endif %}
+            {# Add decorative divider #}
+            {# <hr class="post-list-divider"> #}
             
+            <h2 class="posts-heading">Posts <i class="fas fa-chevron-down"></i></h2>
             <div class="post-list">
                 {% for page in pages %}
                 <article class="post-item">
-                    <h2><a href="{{ page.safe_url }}">{{ page.title }}</a></h2>
-                    {% if page.date %}<time datetime="{{ page.date }}"><i class="far fa-calendar-alt"></i> {{ page.date | replace("-", "/") }}</time>{% endif %}
-                    {% if page.description %}<p>{{ page.description }}</p>{% endif %}
-                    <a href="{{ page.safe_url }}" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+                    {# Wrap entire card content in a link #}
+                    <a href="{{ page.safe_url }}" class="post-link">
+                        <h2>{{ page.title }}</h2>
+                        {% if page.date %}<time datetime="{{ page.date }}"><i class="far fa-calendar-alt"></i> {{ page.date | replace("-", "/") }}</time>{% endif %}
+                        {% if page.description %}<p>{{ page.description }}</p>{% endif %}
+                    </a>
                 </article>
                 {% endfor %}
             </div>

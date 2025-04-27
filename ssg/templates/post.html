@@ -11,6 +11,11 @@
     <header>
         <div class="container">
             <h1><a href="index.html">{{ site_title | default('My Personal Blog') }}</a></h1>
+            {% if site_description %}
+            <div class="site-description">
+                <p>{{ site_description }}</p>
+            </div>
+            {% endif %}
             <nav>
                 <!-- Dynamic navigation could be added back here if needed -->
                 <!-- {% for page in pages %}
